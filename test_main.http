@@ -1,0 +1,52 @@
+# Test your FastAPI endpoints
+###
+# 获取支持语言
+GET http://localhost:8000/lang/all
+Accept: application/json
+
+###
+# key的信息
+GET http://localhost:8000/key/info/b866f4027d1b85e47d2c3fd258a93a36
+Accept: application/json
+
+###
+# 充值
+POST http://localhost:8000/admin/topup/b866f4027d1b85e47d2c3fd258a93a36
+Accept: application/json
+Content-Type: application/json
+
+{
+  "verify_code": "049694",
+  "amount": 100,
+  "operator": "管理员",
+  "fyi": "系统充值"
+}
+###
+# key的使用记录
+GET http://localhost:8000/key/logs/b866f4027d1b85e47d2c3fd258a93a36
+Accept: application/json
+
+###
+#生成key
+POST http://localhost:8000/key/gen
+Accept: application/json
+
+###
+#某个key的翻译记录
+GET http://localhost:8000/translate/logs/b866f4027d1b85e47d2c3fd258a93a36
+Accept: application/json
+Content-Type: application/json
+
+###
+
+POST http://localhost:8000/translate
+Accept: application/json
+Key: b866f4027d1b85e47d2c3fd258a93a36
+Content-Type: application/json
+
+{
+  "source_language_code": "zh-CN",
+  "target_language_code": "ja-JP",
+  "source_text": "你好，请问地铁站怎么走？"
+}
+

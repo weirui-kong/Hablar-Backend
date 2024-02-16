@@ -1,0 +1,8 @@
+text:
+  # 最小扣费
+  minimum: 100
+  # 计费倍率： token * rate = 代币消耗
+  rate: 3.0
+audio:
+  # 计费倍率： token * rate = 代币消耗
+  rate: 0.0 #暂定免费

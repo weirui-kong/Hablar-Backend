@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>管理网页</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // 查询按钮点击事件
+      $('#queryButton').click(function() {
+        var key = $('#keyInput').val();
+        if (key) {
+          $.ajax({
+            url: '/key/info/' + key,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+              // 在页面上展示返回的信息
+              $('#key').text(response.key);
+              $('#balance').text(response.balance);
+              $('#createdTime').text(response.created_time);
+              $('#lastBalanceUpdateTime').text(response.last_balance_update_time);
+            },
+            error: function(xhr, status, error) {
+              alert('查询失败: ' + error);
+            }
+          });
+        }
+      });
+
+      // 生成Key按钮点击事件
+      $('#generateKeyButton').click(function() {
+        $.ajax({
+          url: '/key/gen',
+          type: 'POST',
+          dataType: 'json',
+          success: function(response) {
+            // 在页面上展示返回的信息
+            $('#key').text(response.key);
+            $('#balance').text(response.balance);
+            $('#createdTime').text(response.created_time);
+            $('#lastBalanceUpdateTime').text(response.last_balance_update_time);
+          },
+          error: function(xhr, status, error) {
+            alert('生成Key失败: ' + error);
+          }
+        });
+      });
+
+      // 确认按钮点击事件
+      $('#confirmButton').click(function() {
+        var verifyCode = $('#otpInput').val();
+        var amount = $('#amountInput').val();
+        var key = $('#key').text();
+        if (verifyCode && amount && key) {
+          var requestData = {
+            verify_code: verifyCode,
+            amount: parseInt(amount),
+            operator: '管理员',
+            fyi: '系统充值'
+          };
+
+          $.ajax({
+            url: '/admin/topup/' + key,
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(requestData),
+            success: function(response) {
+              if (response.success) {
+                alert('充值成功');
+              } else {
+                alert('充值失败: ' + response);
+              }
+            },
+            error: function(xhr, status, error) {
+              alert('充值失败: ' + error);
+            }
+          });
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>管理网页</h1>
+
+  <label for="keyInput">Key:</label>
+  <input type="text" id="keyInput" name="keyInput">
+  <button id="queryButton">查询</button>
+
+  <h2>信息</h2>
+  <p>Key: <span id="key"></span></p>
+  <p>余额: <span id="balance"></span></p>
+  <p>创建时间: <span id="createdTime"></span></p>
+  <p>上次余额更新时间: <span id="lastBalanceUpdateTime"></span></p>
+
+  <h2>充值</h2>
+  <label for="otpInput">OTP验证码:</label>
+  <input type="text" id="otpInput" name="otpInput"><br><br>
+  <label for="amountInput">增加余额数量:</label>
+  <input type="number" id="amountInput" name="amountInput"><br><br>
+  <button id="confirmButton">确认</button>
+
+  <h2>生成Key</h2>
+  <button id="generateKeyButton">生成Key</button>
+</body>
+</html>
