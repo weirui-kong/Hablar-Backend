@@ -9,9 +9,11 @@ import datetime
 import azure.cognitiveservices.speech as speechsdk
 from pydub import AudioSegment
 
+import config.runtime_cfg
+
 # Creates an instance of a speech config with specified subscription key and service region.
-speech_key = "97cc09f8bba54d12b5fc4d30f07910ff"
-service_region = "eastasia"
+speech_key = config.runtime_cfg.general['speech_key']
+service_region = config.runtime_cfg.general['service_region']
 
 speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
 
