@@ -1,0 +1,4 @@
+2fa: 'your_2fa_key_here'
+bark: 'https://api.day.app/your_bark_device_token/'
+api_key: 'fk_your_api_key_here'
+base_url: 'https://oa.api2d.net/v1/'

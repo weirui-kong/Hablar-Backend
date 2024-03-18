@@ -3,6 +3,8 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+
+
 # key表模型
 class Key(BaseModel):
     key: str
@@ -14,7 +16,7 @@ class Key(BaseModel):
         orm_mode = True
 
 
-class KeyTopUp(BaseModel):
+class KeyChange(BaseModel):
     verify_code: str
     amount: int
     operator: str

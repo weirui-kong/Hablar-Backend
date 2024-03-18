@@ -1,8 +1,7 @@
 import openai
-
-openai.api_key = 'fk212238-EEbBHfkuTmu6MoheLk992jObMV3QvnIi'
-openai.base_url = 'https://oa.api2d.net/v1/'
-
+import config.runtime_cfg as runtime_cfg
+openai.api_key = runtime_cfg.general['api_key']
+openai.base_url = runtime_cfg.general['base_url']
 
 def translate(src_lang_code: str, tar_lang_code: str, text: str):
     class Result:

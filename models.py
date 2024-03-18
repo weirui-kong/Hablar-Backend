@@ -51,3 +51,10 @@ class Lang(Base):
     lang_code = Column(String(8), nullable=False)
     native_lang_name = Column(String(128), nullable=False)
     voice_code = Column(String(32), nullable=False)
+
+
+class AdminPass(Base):
+    __tablename__ = 'admin_pass'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    d_pass = Column(String(32), nullable=False)
+    expire_time = Column(TIMESTAMP, nullable=False)

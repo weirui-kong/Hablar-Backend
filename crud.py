@@ -12,6 +12,37 @@ import utils.logging
 from database import SessionLocal
 
 
+# admin创建 daypass，有效期默认一天
+# create table admin_pass
+# (
+#     id          int auto_increment,
+#     d_pass        char(32) not null,
+#     expire_time datetime not null
+# );
+def create_day_pass(db: Session) -> str:
+    # 生成一个随机的字符串
+    d_pass = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=32))
+    # 有效期默认一天
+    expire_time = datetime.datetime.now() + datetime.timedelta(days=1)
+    db_pass = models.AdminPass(
+        d_pass=d_pass,
+        expire_time=expire_time
+    )
+    db.add(db_pass)
+    db.commit()
+    db.refresh(db_pass)
+    return d_pass
+
+
+def auth_day_pass(db: Session, d_pass: str) -> bool:
+    db_pass = db.query(models.AdminPass).filter(models.AdminPass.d_pass == d_pass).first()
+    if db_pass is None:
+        return False
+    if db_pass.expire_time < datetime.datetime.now():
+        return False
+    return True
+
+
 def get_langs_all(db: Session) -> [models.Lang]:
     db_langs = db.query(models.Lang).all()
     return db_langs
@@ -53,11 +84,11 @@ def get_all_keys(db: Session) -> [models.Key]:
     return db.query(models.Key).all()
 
 
-def update_key_balance(db: Session, key_id: int, data: schemas.KeyTopUp) -> models.KeyLog:
+def update_key_balance(db: Session, key_id: int, amount: int):
     key_record = db.query(models.Key).filter_by(id=key_id).first()
 
     # 计算新的余额
-    new_balance = key_record.balance + data.amount
+    new_balance = key_record.balance + amount
 
     # 更新 key 表中的余额和最后更新时间
     key_record.balance = new_balance
@@ -66,22 +97,22 @@ def update_key_balance(db: Session, key_id: int, data: schemas.KeyTopUp) -> mode
     # 提交更改x
     db.commit()
 
-    # 新增key_log记录
-
-    log = models.KeyLog(
-        key_id=key_record.id,
-        change=data.amount,
-        success=True,
-        device_operator=data.operator,
-        fyi=data.fyi,
-        timestamp=utils.logging.get_formatted_timestamp_str()
-    )
-
-    db.add(log)
-    db.commit()
-
-    db.refresh(log)
-    return log
+    # # 新增key_log记录
+    #
+    # log = models.KeyLog(
+    #     key_id=key_record.id,
+    #     change=data.amount,
+    #     success=True,
+    #     device_operator=data.operator,
+    #     fyi=data.fyi,
+    #     timestamp=utils.logging.get_formatted_timestamp_str()
+    # )
+    #
+    # db.add(log)
+    # db.commit()
+    #
+    # db.refresh(log)
+    # return log
 
 
 def add_translate_log(db: Session, trs_log: schemas.TrsLog) -> int:
@@ -105,7 +136,7 @@ def get_translate_logs_limit_20(db: Session, key_id: int) -> [models.TrsLog]:
         20).all()
 
 
-def add_key_log(db: Session, key_log: schemas.KeyLog):
+def add_key_log(db: Session, key_log: schemas.KeyLog) -> models.KeyLog:
     db_log = models.KeyLog(
         key_id=key_log.key_id,
         trs_id=key_log.trs_id,
@@ -119,6 +150,7 @@ def add_key_log(db: Session, key_log: schemas.KeyLog):
     db.add(db_log)
     db.commit()
     db.refresh(db_log)
+    return db_log
 
 
 def get_key_logs_limit_20(db: Session, key_id: int) -> [models.KeyLog]:

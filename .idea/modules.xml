@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Harblar-Backend.iml" filepath="$PROJECT_DIR$/.idea/Harblar-Backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Hablar-Backend/.idea/Hablar-Backend.iml" filepath="$PROJECT_DIR$/../Hablar-Backend/.idea/Hablar-Backend.iml" />
     </modules>
   </component>
 </project>

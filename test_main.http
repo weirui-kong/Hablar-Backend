@@ -1,5 +1,10 @@
 # Test your FastAPI endpoints
 ###
+
+# system connect
+GET http://localhost:8000/test
+
+###
 # 获取支持语言
 GET http://localhost:8000/lang/all
 Accept: application/json
@@ -10,17 +15,34 @@ GET http://localhost:8000/key/info/b866f4027d1b85e47d2c3fd258a93a36
 Accept: application/json
 
 ###
+# key的信息 false
+GET http://localhost:8000/key/info/b866f4027d1b8e47d2c3fd258a93a36
+Accept: application/json
+
+###
 # 充值
 POST http://localhost:8000/admin/topup/b866f4027d1b85e47d2c3fd258a93a36
 Accept: application/json
 Content-Type: application/json
 
 {
-  "verify_code": "049694",
+  "verify_code": "869055",
   "amount": 100,
   "operator": "管理员",
   "fyi": "系统充值"
 }
+
+###
+# 获取全部的key
+GET http://localhost:8000/admin/keys/039444
+Accept: application/json
+
+###
+# 获取daypass
+GET http://localhost:8000/admin/daypass/363348
+Accept: application/json
+
+
 ###
 # key的使用记录
 GET http://localhost:8000/key/logs/b866f4027d1b85e47d2c3fd258a93a36
@@ -47,6 +69,6 @@ Content-Type: application/json
 {
   "source_language_code": "zh-CN",
   "target_language_code": "ja-JP",
-  "source_text": "你好，请问地铁站怎么走？"
+  "source_text": "我的大阪烧不要辣椒"
 }
 
